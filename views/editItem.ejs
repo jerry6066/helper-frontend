@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title><%= item.itemName %></title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Andika+New+Basic:wght@700&family=Roboto:wght@300&display=swap" rel="stylesheet">
+
+  <script src="https://kit.fontawesome.com/231fbd9d95.js" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/create.css">
+</head>
+
+<body>
+  <div class="header">
+    <a class="btn btn-outline-primary" style="margin-top: 10px; margin-left: 50px;" href="/" role="button">Home</a>
+  </div>
+
+  <div class="item-top">
+    <div class="top-left">
+      <label>
+        <input type="file" accept="image/jpeg" style="display:none" onchange="encodeImageFileAsURL(this)">
+        <img class="main_img" src="<%= item.iconUrl %>">
+      </label>
+    </div>
+    <div class="top-right">
+      <div class="input-group top-right-input-block">
+        <div class="input-group-prepend">
+          <span class="input-group-text top-right-label">Name</span>
+        </div>
+        <input type="text" class="form-control top-right-input" id="name-input" value="<%= item.itemName %>">
+      </div>
+
+      <div class="input-group top-right-input-block">
+        <div class="input-group-prepend">
+          <span class="input-group-text top-right-label">In Date</span>
+        </div>
+        <input type="text" class="form-control top-right-input" id="inDate-input" value="<%= item.inDate %>">
+      </div>
+
+      <div class="input-group top-right-input-block">
+        <div class="input-group-prepend">
+          <span class="input-group-text top-right-label">Number</span>
+        </div>
+        <input type="text" class="form-control top-right-input" id="number-input" value="<%= item.itemNum %>">
+      </div>
+
+      <div class="input-group top-right-input-block">
+        <div class="input-group-prepend">
+          <span class="input-group-text top-right-label">Expiration</span>
+        </div>
+        <input type="text" class="form-control top-right-input" id="expiration-input" value="<%= item.expiration %>">
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="description-block">
+    <h2>Notes</h2>
+    <div class="paragraph">
+      <textarea oninput="auto_grow(this)" class="form-control description-text" placeholder="Describe your item. The max length for one paragraph is 200 characters. You can add another paragraph." maxlength="200"><%= item.note %></textarea>
+    </div>
+
+    <div class="item-images">
+      <label class='img-container'>
+        <input accept='image/jpeg' type='file' class='image-input' style='display:none' onchange="encodeImageFileAsURL2(this)">
+        <img class='item-image' src='<%= item.mainURL %>'>
+      </label>
+    </div>
+    <p class="end-of-description">End of notes</p>
+  </div>
+  <button class="btn btn-outline-primary save-btn" type="submit"><i class="fas fa-cloud-upload-alt"></i> Submit</button>
+
+  <div class="" style="height: 100px; width: 100%">
+
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    function encodeImageFileAsURL(element) {
+      var file = element.files[0];
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        $('.main_img').attr("src", reader.result);
+        // console.log('RESULT', reader.result)
+      }
+      reader.readAsDataURL(file);
+    }
+
+    function encodeImageFileAsURL2(element) {
+      var file = element.files[0];
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        $('.item-image').attr("src", reader.result);
+        // console.log('RESULT', reader.result)
+      }
+      reader.readAsDataURL(file);
+    }
+
+    function auto_grow(element) {
+      element.style.height = "100px";
+      element.style.height = (element.scrollHeight) + "px";
+    }
+
+    $('.save-btn').click(function() {
+      var id = window.location.pathname.split('edit-item/')[1]
+      var itemNum = $('#number-input').val()
+      var note = $('.description-text')[0].value
+      var inDate = $('#inDate-input').val()
+      var expiration = $('#expiration-input').val()
+      var itemName = $('#name-input').val()
+      var iconUrl = $('.main_img')[0].src
+      var mainURL = $('.item-image')[0].src
+
+      if (itemNum.length === 0 || inDate.length === 0 || expiration.length === 0 || itemName.length == 0) {
+        alert("Please fill in all the blank.")
+        return
+      }
+
+      data = {
+        'id': id,
+        'itemNum': itemNum,
+        'note': note,
+        'inDate': inDate,
+        'expiration': expiration,
+        'itemName': itemName,
+        'iconUrl': iconUrl,
+        'mainURL': mainURL
+      }
+
+      $.ajax({
+        url: 'https://wdrd6suw5h.execute-api.us-east-1.amazonaws.com/test/item/' + id,
+        crossDomain: true,
+        type: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data),
+        dataType: "json"
+      }).done(function(response) {
+        window.location.pathname = '/item/' + response;
+      });
+    })
+  </script>
+</body>
+
+</html>
